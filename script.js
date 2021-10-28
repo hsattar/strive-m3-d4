@@ -1,10 +1,7 @@
 const booksContainer = document.querySelector('.books-container')
 const cartContainer = document.querySelector('.cart-container')
 
-const shoppingCart = {
-    quantity: 0,
-    items: []
-}
+const shoppingCart = []
 
 const addToCartBtn = () => {
     const addToCartBtn = document.querySelectorAll('.addToCart')
@@ -50,15 +47,22 @@ const addToCart = e => {
     const price = btn.previousElementSibling.innerText
     const title = btn.previousElementSibling.previousElementSibling.innerText
     const image = btn.parentElement.previousElementSibling.src
-    shoppingCart.quantity++
-    shoppingCart.items.push({title, price, image})
+    const qty = 1
+    if (shoppingCart.length >  0) {
+        shoppingCart.forEach(item => {
+            if (item.title === title) return item.qty++
+            if (item.title !== title) return shoppingCart.push({title, price, image, qty})
+        })
+    } 
+    if (shoppingCart.length === 0) return shoppingCart.push({title, price, image, qty})
     updateCartNavbarDisplay()
     updateCartSection()
+    console.log(shoppingCart)
 }
 
 const updateCartNavbarDisplay = () => {
     const cartTotal = document.querySelector('.bag-total')
-    cartTotal.innerText = shoppingCart.quantity
+    cartTotal.innerText = shoppingCart.length
 }
     
 const updateCartSection = () => {
@@ -67,15 +71,28 @@ const updateCartSection = () => {
         cartHeading.innerHTML = '<h3>Your Cart Is Empty</h3>'
         cartContainer.innerHTML = ``
     } else {
-        cartHeading.innerHTML = `<h3>Your Cart Has ${shoppingCart.quantity} Item</h3><button class="btn btn-danger ml-2" onclick="clearCart()">Clear All</button>`
-        cartContainer.innerHTML = shoppingCart.items.map(item => `
-        <div class="col-12 d-flex justify-content-between">
+        cartHeading.innerHTML = `<h3>Your Cart Has ${shoppingCart.length} Item</h3><button class="btn btn-danger ml-2" onclick="clearCart()">Clear All</button>`
+        cartContainer.innerHTML = `
+        <div class="col-12 d-flex justify-content-between mb-3">
+            <h5>Title</h5>
+            <h5>Price</h5>
+            <h5>Qty</h5>
+            <h5>Options</h5>
+        </div>`
+        cartContainer.innerHTML += shoppingCart.map(item => `
+        <div class="col-12 d-flex justify-content-between mb-3">
             <p>${item.title}</p>
             <p>${item.price}</p>
-        </div>
-        `)
+            <p>${item.qty}</p>
+            <i class="btn btn-danger bi bi-trash"></i>
+        </div>`
+        ).join('')
     }
 }
+
+// const calculateCartTotal = (price) => {
+//     console.log(price)
+// }
 
 const searchInput = document.querySelector('#searchInput')
 
@@ -107,6 +124,7 @@ const clearCart = () => {
         btn.innerText = 'Add To Cart'
     })
     addToCartBtn()
+    console.log(shoppingCart)
 }
 
 const under10 = document.querySelector('#under10')
@@ -138,3 +156,5 @@ const filterByPrice = (checkbox, price) => {
         loadBooks()
     }
 }
+
+// TODO: when checkbox is unchecked all books are loaded ignoring current filter
