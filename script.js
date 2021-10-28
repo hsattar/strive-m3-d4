@@ -1,5 +1,10 @@
 const booksContainer = document.querySelector('.books-container')
 
+const shoppingCart = {
+    quantity: 0,
+    items: []
+}
+
 const addToCartBtn = () => {
     const addToCartBtn = document.querySelectorAll('.addToCart')
     addToCartBtn.forEach(btn => btn.addEventListener('click', e => {
@@ -15,7 +20,8 @@ fetch('https://striveschool-api.herokuapp.com/books')
     <div class="card">
         <img src=${book.img} class="card-img-top book-image" alt="...">
         <div class="card-body">
-            <p class="card-text">${book.title}</p>
+            <p class="card-text font-weight-bold">${book.title}</p>
+            <p class="card-text">${book.price}</p>
             <button class="btn btn-success addToCart">Add To cart</button>
         </div>
     </div>
@@ -26,15 +32,19 @@ fetch('https://striveschool-api.herokuapp.com/books')
 
 
 const addToCart = e => {
-    console.log(e)
     const btn = e.target
     btn.className = 'btn btn-outline-success'
     btn.innerText = 'Added'
-    const title = btn.previousElementSibling.innerText
-    console.log(title)
+    const price = btn.previousElementSibling.innerText
+    const title = btn.previousElementSibling.previousElementSibling.innerText
+    const image = btn.parentElement.previousElementSibling.src
+    shoppingCart.quantity++
+    shoppingCart.items.push({title, price, image})
+    console.log(shoppingCart)
+    updateCartNavbarDisplay()
 }
 
-const shoppingCart = {
-    quantity: 0,
-    items: []
+const updateCartNavbarDisplay = () => {
+    const cartTotal = document.querySelector('.bag-total')
+    cartTotal.innerText = shoppingCart.quantity
 }
