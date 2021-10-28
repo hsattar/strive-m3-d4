@@ -11,6 +11,13 @@ const addToCartBtn = () => {
     )
 }
 
+const hideBookBtn = () => {
+    const hideBookBtn = document.querySelectorAll('.hideBook')
+    hideBookBtn.forEach(btn => btn.addEventListener('click', e => {
+        hideBook(e)
+    }))
+}
+
 const fetchBooks = () => {
     return fetch('https://striveschool-api.herokuapp.com/books')
     .then(response => response.json())
@@ -20,7 +27,10 @@ const fetchBooks = () => {
 const loadBooks = () => {
     fetchBooks()
     .then(data => booksCardLayout(booksContainer, data))
-    .then(addToCartBtn)
+    .then(() => {
+        addToCartBtn()
+        hideBookBtn()
+    })
 }
 
 const booksCardLayout = (container, data) => {
@@ -32,6 +42,7 @@ const booksCardLayout = (container, data) => {
                 <p class="card-text font-weight-bold">${book.title}</p>
                 <p class="card-text">£${book.price.toFixed(2)}</p>
                 <button class="btn btn-success addToCart">Add To cart</button>
+                <button class="btn btn-danger hideBook">Hide Book</button>
             </div>
         </div>
     </div>
@@ -58,6 +69,11 @@ const addToCart = e => {
     updateCartNavbarDisplay()
     updateCartSection()
     console.log(shoppingCart)
+}
+
+const hideBook = e => {
+    const cardContainer = e.currentTarget.closest('.col-12')
+    cardContainer.classList.add('d-none')
 }
 
 const updateCartNavbarDisplay = () => {
@@ -109,7 +125,10 @@ const searchBooks = () => {
         if (filteredBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
         booksCardLayout(booksContainer, filteredBooks)
         })
-        .then(addToCartBtn)
+        .then(() => {
+            addToCartBtn()
+            hideBookBtn()
+        })
         .catch(err => err)
     }
 }
@@ -151,7 +170,10 @@ const filterByPrice = (checkbox, price) => {
         if (cheapBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
         booksCardLayout(booksContainer, cheapBooks)
         })
-        .then(addToCartBtn)
+        .then(() => {
+            addToCartBtn()
+            hideBookBtn()
+        })
     } else {
         loadBooks()
     }
