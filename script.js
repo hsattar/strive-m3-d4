@@ -61,11 +61,17 @@ const addToCart = e => {
     const qty = 1
     if (shoppingCart.length >  0) {
         shoppingCart.forEach(item => {
-            if (item.title === title) return item.qty++
-            if (item.title !== title) return shoppingCart.push({title, price, image, qty})
+            if (item.title === title) {
+                item.qty++
+            } 
+            if (item.title !== title) {
+                shoppingCart.push({title, price, image, qty})
+            } 
         })
     } 
-    if (shoppingCart.length === 0) return shoppingCart.push({title, price, image, qty})
+    if (shoppingCart.length === 0) {
+    shoppingCart.push({title, price, image, qty})
+    }    
     updateCartNavbarDisplay()
     updateCartSection()
     console.log(shoppingCart)
@@ -100,10 +106,25 @@ const updateCartSection = () => {
             <p>${item.title}</p>
             <p>${item.price}</p>
             <p>${item.qty}</p>
-            <i class="btn btn-danger bi bi-trash"></i>
+            <i class="btn btn-danger bi bi-trash deleteBook"></i>
         </div>`
         ).join('')
+        deleteBookBtn()
     }
+}
+
+// TODO: Finish This
+
+const deleteBookBtn = () => {
+    console.log('works')
+    const deleteBtn = document.querySelectorAll('.deleteBook')
+    deleteBtn.forEach(btn => btn.addEventListener('click', e => {
+        deleteBookBtn(e)
+    }))
+}
+
+const deleteBook = e => {
+    console.log(e)
 }
 
 // const calculateCartTotal = (price) => {
