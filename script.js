@@ -70,7 +70,6 @@ const updateCartSection = () => {
 }
 
 const searchInput = document.querySelector('#searchInput')
-const searchBtn = document.querySelector('#searchBtn')
 
 searchInput.addEventListener('keyup', () => {
     searchBooks()
@@ -81,7 +80,10 @@ const searchBooks = () => {
     if (searchInput.value.length > 2) {
         fetch('https://striveschool-api.herokuapp.com/books')
         .then(response => response.json())
-        .then(data => booksContainer.innerHTML = data.filter(book => book.title.toLowerCase().includes(searchInput.value.toLowerCase())).map(book => `
+        .then(data => {
+        const filteredBooks = data.filter(book => book.title.toLowerCase().includes(searchInput.value.toLowerCase()))
+        if (filteredBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
+        booksContainer.innerHTML = filteredBooks.map(book => `
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
             <div class="card">
                 <img src=${book.img} class="card-img-top book-image" alt="...">
@@ -92,7 +94,8 @@ const searchBooks = () => {
                 </div>
             </div>
         </div>
-        `).join(''))
+        `).join('')
+        })
         .then(addToCartBtn)
         .catch(err => err)
     }
