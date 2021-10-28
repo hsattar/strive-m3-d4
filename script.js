@@ -77,27 +77,22 @@ searchInput.addEventListener('keyup', () => {
 })
 
 const searchBooks = () => {
-    if (searchInput.value.length <= 2) {
-        fetchBooks()
-    }
+    if (searchInput.value.length <= 2) fetchBooks()
     if (searchInput.value.length > 2) {
         fetch('https://striveschool-api.herokuapp.com/books')
         .then(response => response.json())
-        .then(data => {
-            const filtereBooks = data.filter(book => book.title.includes(searchInput.value))
-            booksContainer.innerHTML = filtereBooks.map(book => `
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
-                <div class="card">
-                    <img src=${book.img} class="card-img-top book-image" alt="...">
-                    <div class="card-body">
-                        <p class="card-text font-weight-bold">${book.title}</p>
-                        <p class="card-text">${book.price}</p>
-                        <button class="btn btn-success addToCart">Add To cart</button>
-                    </div>
+        .then(data => booksContainer.innerHTML = data.filter(book => book.title.toLowerCase().includes(searchInput.value.toLowerCase())).map(book => `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
+            <div class="card">
+                <img src=${book.img} class="card-img-top book-image" alt="...">
+                <div class="card-body">
+                    <p class="card-text font-weight-bold">${book.title}</p>
+                    <p class="card-text">${book.price}</p>
+                    <button class="btn btn-success addToCart">Add To cart</button>
                 </div>
             </div>
-        `).join('')
-        })
+        </div>
+        `).join(''))
         .then(addToCartBtn)
         .catch(err => err)
     }
