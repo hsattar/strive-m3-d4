@@ -1,4 +1,5 @@
 const booksContainer = document.querySelector('.books-container')
+const cartContainer = document.querySelector('.cart-container')
 
 const shoppingCart = {
     quantity: 0,
@@ -42,9 +43,26 @@ const addToCart = e => {
     shoppingCart.items.push({title, price, image})
     console.log(shoppingCart)
     updateCartNavbarDisplay()
+    updateCartSection()
 }
 
 const updateCartNavbarDisplay = () => {
     const cartTotal = document.querySelector('.bag-total')
     cartTotal.innerText = shoppingCart.quantity
+}
+    
+const updateCartSection = () => {
+    if (shoppingCart.quantity === 0) {
+        cartContainer.innerHTML = `
+        <div class="col-12 text-center">
+            <h3>Your Cart Is Empty</h3>
+        </div>`
+    } else {
+        cartContainer.innerHTML = shoppingCart.items.map(item => `
+        <div class="col-12 d-flex justify-content-between">
+            <p>${item.title}</p>
+            <p>${item.price}</p>
+        </div>
+        `)
+    }
 }

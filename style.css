@@ -3,6 +3,11 @@
   object-fit: cover;
 }
 
-.bag-total {
-  font-style: normal;
+.bi-bag {
+  color: black;
+}
+
+.cart-image {
+  height: 400px;
+  object-fit: cover;
 }
