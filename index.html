@@ -32,17 +32,30 @@
 </nav>
 
 <div class="container">
+
+    <div class="input-group mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search Books" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-primary" id="searchBtn">Search</button>
+        </div>
+    </div>
+
     <div class="row books-container d-flex justify-content-center">
 
     </div>
 
     <hr>
 
-    <div id="cart" class="row cart-container d-flex justify-content-center mt-3 mb-5 pb-5">
+    <div id="cart" class="row">
         <div class="col-12 text-center">
-            <h3>Your Cart Is Empty</h3>
+            <h3 class="cart-heading">Your Cart Is Empty</h3>
         </div>
     </div>
+
+    <div class="row cart-container d-flex justify-content-center mb-5 pb-5">
+
+    </div>
+
 </div>
     
 </body>
