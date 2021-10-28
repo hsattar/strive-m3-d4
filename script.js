@@ -22,7 +22,12 @@ const fetchBooks = () => {
 
 const loadBooks = () => {
     fetchBooks()
-    .then(data => booksContainer.innerHTML = data.map(book => `
+    .then(data => booksCardLayout(booksContainer, data))
+    .then(addToCartBtn)
+}
+
+const booksCardLayout = (container, data) => {
+    container.innerHTML = data.map(book => `
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
         <div class="card">
             <img src=${book.img} class="card-img-top book-image" alt="...">
@@ -33,8 +38,7 @@ const loadBooks = () => {
             </div>
         </div>
     </div>
-    `).join(''))
-    .then(addToCartBtn)
+    `).join('')
 }
 
 loadBooks()
@@ -86,18 +90,7 @@ const searchBooks = () => {
         .then(data => {
         const filteredBooks = data.filter(book => book.title.toLowerCase().includes(searchInput.value.toLowerCase()))
         if (filteredBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
-        booksContainer.innerHTML = filteredBooks.map(book => `
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
-            <div class="card">
-                <img src=${book.img} class="card-img-top book-image" alt="...">
-                <div class="card-body">
-                    <p class="card-text font-weight-bold">${book.title}</p>
-                    <p class="card-text">${book.price}</p>
-                    <button class="btn btn-success addToCart">Add To cart</button>
-                </div>
-            </div>
-        </div>
-        `).join('')
+        booksCardLayout(booksContainer, filteredBooks)
         })
         .then(addToCartBtn)
         .catch(err => err)
@@ -117,27 +110,31 @@ const clearCart = () => {
 }
 
 const under10 = document.querySelector('#under10')
+const under15 = document.querySelector('#under15')
+const under20 = document.querySelector('#under20')
+
 under10.addEventListener('click', () => {
-    if (under10.checked) {
+    filterByPrice(under10, 10)
+})
+
+under15.addEventListener('click', () => {
+    filterByPrice(under15, 15)
+})
+
+under20.addEventListener('click', () => {
+    filterByPrice(under20, 20)
+})
+
+const filterByPrice = (checkbox, price) => {
+    if (checkbox.checked) {
         fetchBooks()
         .then(data => {
-        const cheapBooks = data.filter(book => book.price < 10)
+        const cheapBooks = data.filter(book => book.price < price)
         if (cheapBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
-        booksContainer.innerHTML = cheapBooks.map(book => `
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
-            <div class="card">
-                <img src=${book.img} class="card-img-top book-image" alt="...">
-                <div class="card-body">
-                    <p class="card-text font-weight-bold">${book.title}</p>
-                    <p class="card-text">£${book.price.toFixed(2)}</p>
-                    <button class="btn btn-success addToCart">Add To cart</button>
-                </div>
-            </div>
-        </div>
-        `).join('')
+        booksCardLayout(booksContainer, cheapBooks)
         })
         .then(addToCartBtn)
     } else {
         loadBooks()
     }
-})
+}
