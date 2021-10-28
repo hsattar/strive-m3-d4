@@ -23,7 +23,7 @@ const fetchBooks = () => {
             <img src=${book.img} class="card-img-top book-image" alt="...">
             <div class="card-body">
                 <p class="card-text font-weight-bold">${book.title}</p>
-                <p class="card-text">${book.price}</p>
+                <p class="card-text">£${book.price.toFixed(2)}</p>
                 <button class="btn btn-success addToCart">Add To cart</button>
             </div>
         </div>
@@ -37,7 +37,7 @@ fetchBooks()
 
 const addToCart = e => {
     const btn = e.target
-    btn.className = 'btn btn-outline-success'
+    btn.className = 'btn btn-outline-success added'
     btn.innerText = 'Added'
     const price = btn.previousElementSibling.innerText
     const title = btn.previousElementSibling.previousElementSibling.innerText
@@ -57,9 +57,10 @@ const updateCartNavbarDisplay = () => {
 const updateCartSection = () => {
     const cartHeading = document.querySelector('.cart-heading')
     if (shoppingCart.quantity === 0) {
-        cartHeading.innerText = 'Your Cart Is Empty'
+        cartHeading.innerHTML = '<h3>Your Cart Is Empty</h3>'
+        cartContainer.innerHTML = ``
     } else {
-        cartHeading.innerText = `Your Cart Has ${shoppingCart.quantity} Item`
+        cartHeading.innerHTML = `<h3>Your Cart Has ${shoppingCart.quantity} Item</h3><button class="btn btn-danger ml-2" onclick="clearCart()">Clear All</button>`
         cartContainer.innerHTML = shoppingCart.items.map(item => `
         <div class="col-12 d-flex justify-content-between">
             <p>${item.title}</p>
@@ -99,4 +100,16 @@ const searchBooks = () => {
         .then(addToCartBtn)
         .catch(err => err)
     }
+}
+
+const clearCart = () => {
+    shoppingCart.quantity = 0
+    shoppingCart.items = []
+    updateCartSection()
+    const addedBtns = document.querySelectorAll('.added')
+    addedBtns.forEach(btn => {
+        btn.className = 'btn btn-success addToCart'
+        btn.innerText = 'Add To Cart'
+    })
+    addToCartBtn()
 }
