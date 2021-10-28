@@ -15,8 +15,13 @@ const addToCartBtn = () => {
 }
 
 const fetchBooks = () => {
-    fetch('https://striveschool-api.herokuapp.com/books')
+    return fetch('https://striveschool-api.herokuapp.com/books')
     .then(response => response.json())
+    .catch(err => err)
+}
+
+const loadBooks = () => {
+    fetchBooks()
     .then(data => booksContainer.innerHTML = data.map(book => `
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
         <div class="card">
@@ -30,10 +35,9 @@ const fetchBooks = () => {
     </div>
     `).join(''))
     .then(addToCartBtn)
-    .catch(err => err)
 }
 
-fetchBooks()
+loadBooks()
 
 const addToCart = e => {
     const btn = e.target
@@ -44,7 +48,6 @@ const addToCart = e => {
     const image = btn.parentElement.previousElementSibling.src
     shoppingCart.quantity++
     shoppingCart.items.push({title, price, image})
-    console.log(shoppingCart)
     updateCartNavbarDisplay()
     updateCartSection()
 }
@@ -77,10 +80,9 @@ searchInput.addEventListener('keyup', () => {
 })
 
 const searchBooks = () => {
-    if (searchInput.value.length <= 2) fetchBooks()
+    if (searchInput.value.length <= 2) loadBooks()
     if (searchInput.value.length > 2) {
-        fetch('https://striveschool-api.herokuapp.com/books')
-        .then(response => response.json())
+        fetchBooks()
         .then(data => {
         const filteredBooks = data.filter(book => book.title.toLowerCase().includes(searchInput.value.toLowerCase()))
         if (filteredBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
@@ -113,3 +115,29 @@ const clearCart = () => {
     })
     addToCartBtn()
 }
+
+const under10 = document.querySelector('#under10')
+under10.addEventListener('click', () => {
+    if (under10.checked) {
+        fetchBooks()
+        .then(data => {
+        const cheapBooks = data.filter(book => book.price < 10)
+        if (cheapBooks.length < 1) return booksContainer.innerHTML = `<h3>We Found No Results For Your Search</h3>`
+        booksContainer.innerHTML = cheapBooks.map(book => `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 py-2">
+            <div class="card">
+                <img src=${book.img} class="card-img-top book-image" alt="...">
+                <div class="card-body">
+                    <p class="card-text font-weight-bold">${book.title}</p>
+                    <p class="card-text">£${book.price.toFixed(2)}</p>
+                    <button class="btn btn-success addToCart">Add To cart</button>
+                </div>
+            </div>
+        </div>
+        `).join('')
+        })
+        .then(addToCartBtn)
+    } else {
+        loadBooks()
+    }
+})

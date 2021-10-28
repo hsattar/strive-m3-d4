@@ -14,3 +14,10 @@ EXTRAS:
 Add a empty cart button, to delete the whole list
 Create a detail page: when the user clicks on a book, they get redirected to another page. Pass the ASIN as a query string.
 In the detail page, show the details of the book matching the ASIN in the query string: use this endpoint: https://striveschool-api.herokuapp.com/books/your_id_here
+
+MY EXTRAS:
+ADD FILTERING OPTIONS, PRICE LOW TO HIGH, HIGH TO LOW ETC...
+UNDER £10 ETC...
+LIMIT RESULTS - ADD PAGINATION
+UPDATE CART TOTAL WITH VALUE
+DUPLICATE BOOKS - SHOW QTY ON ORIGINAL
